@@ -197,7 +197,8 @@ Top-level skeleton:
     ├── configs/      # global config (env, API clients, theme)
     ├── hooks/        # cross-feature hooks
     ├── icons/        # icon components
-    ├── providers/    # third-party providers (React Query, theme, auth)
+    ├── providers/    # third-party providers (React Query, theme, auth) — see below
+    │   └── providers.tsx  # exports `Providers`, a single wrapper composing every provider
     ├── stores/       # global Zustand stores only — feature stores live in the feature (§16)
     └── utils/        # cross-feature pure utils (see §4)
 ```
@@ -218,6 +219,43 @@ features/<name>/
 ```
 
 Do not invent new file roles ad-hoc. If a new role is needed, decide it deliberately and apply it consistently across features.
+
+### The `Providers` wrapper
+
+`shared/providers/providers.tsx` exports a single `Providers` component that composes every app-wide client provider (React Query, theme, auth, etc.) in the correct order. The root `app/layout.tsx` imports it once and wraps `{children}` with it — no nested layout or page mounts providers. Because providers run on the client, `providers.tsx` carries the `'use client'` directive while `app/layout.tsx` stays a Server Component. Individual providers can still live in their own files inside `shared/providers/` (e.g. `query.provider.tsx`, `theme.provider.tsx`); `providers.tsx` is the composition root that consumes them.
+
+```tsx
+// shared/providers/providers.tsx
+"use client";
+
+import type { PropsWithChildren } from "react";
+
+import { QueryProvider } from "@/shared/providers/query.provider";
+import { ThemeProvider } from "@/shared/providers/theme.provider";
+
+export function Providers({ children }: PropsWithChildren) {
+  return (
+    <QueryProvider>
+      <ThemeProvider>{children}</ThemeProvider>
+    </QueryProvider>
+  );
+}
+```
+
+```tsx
+// app/layout.tsx
+import { Providers } from "@/shared/providers/providers";
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  );
+}
+```
 
 ## 7. Path aliases
 

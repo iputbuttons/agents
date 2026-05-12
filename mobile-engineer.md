@@ -20,25 +20,24 @@ pnpx skills add https://github.com/supabase/agent-skills --skill supabase
 pnpx skills add https://github.com/supabase/agent-skills --skill supabase-postgres-best-practices
 pnpx skills add https://github.com/vercel-labs/agent-skills --skill vercel-react-native-skills
 pnpx skills add https://github.com/sleekdotdesign/agent-skills --skill sleek-design-mobile-apps
-pnpx skills add https://github.com/pbakaus/impeccable --skill animate
-pnpx skills add https://github.com/pbakaus/impeccable --skill colorize
+pnpx skills add https://github.com/pbakaus/impeccable
 pnpx skills add https://cli.sentry.dev
 ```
 
 ### When to invoke each skill
 
-| Skill | Invoke when |
-|---|---|
-| `expo` | Touching any Expo SDK module — `expo-image`, `expo-secure-store`, `expo-linking`, `expo-local-authentication`, `expo-screen-capture`, `expo-haptics`, `expo-router`, EAS Build profiles, `app.json` / `app.config.ts`. |
-| `frontend-design` | Designing a new component or screen before writing JSX — variants, states, copy, layout. |
-| `ui-ux-pro-max` | Polishing UX details: motion, focus order, error feedback, microinteractions. |
-| `sleek-design-mobile-apps` | Mobile-first visual design — spacing, typography rhythm, native-feel patterns (iOS vs Android). |
-| `supabase` | Any Supabase work — client setup (`shared/configs/supabase.ts`), auth flows, storage, realtime, Edge Functions (§17). |
-| `supabase-postgres-best-practices` | Writing or reviewing migrations, RLS policies, indexes, triggers, or any raw SQL. |
-| `vercel-react-native-skills` | RN-specific implementation: `FlashList`, Reanimated 3, `react-native-gesture-handler`, performance profiling, EAS Build (§15). |
-| `animate` | Designing or implementing animations and motion — easing, timing, choreography, Reanimated worklets. |
-| `colorize` | Choosing or refining color palettes, contrast, and theming decisions. |
-| `sentry-cli` | Configuring `sentry-expo`, uploading source maps, tagging releases, scrubbing PII via `beforeSend` (§14, §18). |
+| Skill                              | Invoke when                                                                                                                                                                                                            |
+| ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `expo`                             | Touching any Expo SDK module — `expo-image`, `expo-secure-store`, `expo-linking`, `expo-local-authentication`, `expo-screen-capture`, `expo-haptics`, `expo-router`, EAS Build profiles, `app.json` / `app.config.ts`. |
+| `frontend-design`                  | Designing a new component or screen before writing JSX — variants, states, copy, layout.                                                                                                                               |
+| `ui-ux-pro-max`                    | Polishing UX details: motion, focus order, error feedback, microinteractions.                                                                                                                                          |
+| `sleek-design-mobile-apps`         | Mobile-first visual design — spacing, typography rhythm, native-feel patterns (iOS vs Android).                                                                                                                        |
+| `supabase`                         | Any Supabase work — client setup (`shared/configs/supabase.ts`), auth flows, storage, realtime, Edge Functions (§17).                                                                                                  |
+| `supabase-postgres-best-practices` | Writing or reviewing migrations, RLS policies, indexes, triggers, or any raw SQL.                                                                                                                                      |
+| `vercel-react-native-skills`       | RN-specific implementation: `FlashList`, Reanimated 3, `react-native-gesture-handler`, performance profiling, EAS Build (§15).                                                                                         |
+| `animate`                          | Designing or implementing animations and motion — easing, timing, choreography, Reanimated worklets.                                                                                                                   |
+| `colorize`                         | Choosing or refining color palettes, contrast, and theming decisions.                                                                                                                                                  |
+| `sentry-cli`                       | Configuring `sentry-expo`, uploading source maps, tagging releases, scrubbing PII via `beforeSend` (§14, §18).                                                                                                         |
 
 When multiple skills apply to the same task, invoke them broadest-to-narrowest — e.g. `frontend-design` for the component shape, then `sleek-design-mobile-apps` for mobile polish, then `vercel-react-native-skills` for RN-specific implementation details.
 
@@ -110,7 +109,10 @@ export function formatPrice(value: number): string {
   /* ... */
 }
 
-export function submitOrderForm({ cart, customer }: SubmitOrderFormParams): Promise<Order> {
+export function submitOrderForm({
+  cart,
+  customer,
+}: SubmitOrderFormParams): Promise<Order> {
   /* ... */
 }
 ```
@@ -176,7 +178,8 @@ Top-level skeleton:
     ├── configs/      # global config (env, API clients, theme)
     ├── hooks/        # cross-feature hooks
     ├── icons/        # icon components
-    ├── providers/    # third-party providers (React Query, theme, auth)
+    ├── providers/    # third-party providers (React Query, theme, auth) — see below
+    │   └── providers.tsx  # exports `Providers`, a single wrapper composing every provider
     ├── stores/       # global Zustand stores only — feature stores live in the feature (§16)
     └── utils/        # cross-feature pure utils (see §4)
 ```
@@ -198,12 +201,56 @@ features/<name>/
 
 Do not invent new file roles ad-hoc. If a new role is needed, decide it deliberately and apply it consistently across features.
 
+### The `Providers` wrapper
+
+`shared/providers/providers.tsx` exports a single `Providers` component that composes every app-wide provider (React Query, theme, auth, gesture handler root, safe-area, etc.) in the correct order. The root `app/_layout.tsx` imports it once and wraps the router tree with it — no other layout or screen mounts providers. Individual providers can still live in their own files inside `shared/providers/` (e.g. `query.provider.tsx`, `theme.provider.tsx`); `providers.tsx` is the composition root that consumes them.
+
+```tsx
+// shared/providers/providers.tsx
+import type { PropsWithChildren } from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+
+import { AuthProvider } from "@/shared/providers/auth.provider";
+import { QueryProvider } from "@/shared/providers/query.provider";
+import { ThemeProvider } from "@/shared/providers/theme.provider";
+
+export function Providers({ children }: PropsWithChildren) {
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <QueryProvider>
+          <ThemeProvider>
+            <AuthProvider>{children}</AuthProvider>
+          </ThemeProvider>
+        </QueryProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
+  );
+}
+```
+
+```tsx
+// app/_layout.tsx
+import { Stack } from "expo-router";
+
+import { Providers } from "@/shared/providers/providers";
+
+export default function RootLayout() {
+  return (
+    <Providers>
+      <Stack />
+    </Providers>
+  );
+}
+```
+
 ## 7. Path aliases
 
 - Configure in `tsconfig.json` `paths` and (when needed) `babel.config.js` `module-resolver`. Aliases mirror the §6 top-level skeleton:
-  - `@/app/*`        → `app/*`
-  - `@/features/*`   → `features/*`
-  - `@/shared/*`     → `shared/*`
+  - `@/app/*` → `app/*`
+  - `@/features/*` → `features/*`
+  - `@/shared/*` → `shared/*`
 - Inside `shared/`, drill in via the alias: `@/shared/components/button`, `@/shared/icons/users`, `@/shared/configs/supabase`.
 - Use the alias whenever crossing a feature boundary; relative imports are reserved for siblings inside the same module.
 
@@ -245,7 +292,9 @@ Do not invent new file roles ad-hoc. If a new role is needed, decide it delibera
   // features/cards/components/card.tsx
   import type { CardProps } from "@/features/cards/cards.types";
 
-  export function Card({ onPress, title }: CardProps) { /* ... */ }
+  export function Card({ onPress, title }: CardProps) {
+    /* ... */
+  }
   ```
 
 - **Function param objects**: `type <Function>Params` in PascalCase. If the function is `calcItems`, the params type is `CalcItemsParams`. Same rule — declared in `<name>.types.ts`, imported by the util file.
@@ -262,7 +311,9 @@ Do not invent new file roles ad-hoc. If a new role is needed, decide it delibera
   // features/items/items.utils.ts
   import type { CalcItemsParams } from "@/features/items/items.types";
 
-  export function calcItems({ discount, items }: CalcItemsParams): number { /* ... */ }
+  export function calcItems({ discount, items }: CalcItemsParams): number {
+    /* ... */
+  }
   ```
 
 - Use `type` for everything except database row types and shapes designed for augmentation. Don't mix `type Foo` and `interface Foo` for the same concept.
@@ -280,7 +331,7 @@ Either way: any change to the contract goes to the source first (migration / Ope
 
 ## 10. Design system
 
-Design tokens (colors, spacing, radii, elevation, typography, breakpoints) live in `tailwind.config.*` and the project's design system docs — not in this file. What this section enforces is how the app *consumes* the design system: token names only (never raw values), the a11y minimums below, and the iconography rules.
+Design tokens (colors, spacing, radii, elevation, typography, breakpoints) live in `tailwind.config.*` and the project's design system docs — not in this file. What this section enforces is how the app _consumes_ the design system: token names only (never raw values), the a11y minimums below, and the iconography rules.
 
 ### Accessibility minimums
 
@@ -449,16 +500,16 @@ Pick the right tool per **kind** of state. The most common bug is treating serve
 
 ### Decision matrix
 
-| Kind of state                             | Tool                              | Notes                                                                      |
-| ----------------------------------------- | --------------------------------- | -------------------------------------------------------------------------- |
-| Server data (anything from an API)        | **TanStack Query (React Query)**  | Caching, refetch, optimistic updates, invalidation. Don't mirror in a store. |
-| Global UI state (theme, modals, drawers)  | **Zustand** in `shared/stores/`   | Tiny, no boilerplate, no provider needed. Works outside React.             |
-| Feature-scoped client state               | **Zustand** in `features/<name>/<name>.store.ts` | Lives with the feature. Don't promote to `shared/` unless another feature reads it. |
-| Auth / user session                       | Supabase Auth (see §17)           | Session in `expo-secure-store`; never `AsyncStorage`. Mirror user into Zustand. |
-| Form state                                | `react-hook-form` + `zod`         | Never put form values in a global store.                                   |
-| Navigation state                          | Expo Router / React Navigation    | Don't duplicate route params in a store.                                   |
-| Local-only state                          | `useState` / `useReducer`         | Default. Don't reach for a store.                                          |
-| Cross-component derived state             | `useMemo` + props, or Zustand     | Lift only when more than two siblings need it.                             |
+| Kind of state                            | Tool                                             | Notes                                                                               |
+| ---------------------------------------- | ------------------------------------------------ | ----------------------------------------------------------------------------------- |
+| Server data (anything from an API)       | **TanStack Query (React Query)**                 | Caching, refetch, optimistic updates, invalidation. Don't mirror in a store.        |
+| Global UI state (theme, modals, drawers) | **Zustand** in `shared/stores/`                  | Tiny, no boilerplate, no provider needed. Works outside React.                      |
+| Feature-scoped client state              | **Zustand** in `features/<name>/<name>.store.ts` | Lives with the feature. Don't promote to `shared/` unless another feature reads it. |
+| Auth / user session                      | Supabase Auth (see §17)                          | Session in `expo-secure-store`; never `AsyncStorage`. Mirror user into Zustand.     |
+| Form state                               | `react-hook-form` + `zod`                        | Never put form values in a global store.                                            |
+| Navigation state                         | Expo Router / React Navigation                   | Don't duplicate route params in a store.                                            |
+| Local-only state                         | `useState` / `useReducer`                        | Default. Don't reach for a store.                                                   |
+| Cross-component derived state            | `useMemo` + props, or Zustand                    | Lift only when more than two siblings need it.                                      |
 
 ### Why React Query (not Redux/RTK Query) by default
 
@@ -493,7 +544,7 @@ import NetInfo from "@react-native-community/netinfo";
 import { AppState } from "react-native";
 
 onlineManager.setEventListener((setOnline) =>
-  NetInfo.addEventListener((state) => setOnline(!!state.isConnected))
+  NetInfo.addEventListener((state) => setOnline(!!state.isConnected)),
 );
 
 AppState.addEventListener("change", (status) => {
@@ -529,7 +580,8 @@ type CartStore = {
 export const useCartStore = create<CartStore>((set) => ({
   addItem: (id) => set((s) => ({ itemIds: [...s.itemIds, id] })),
   itemIds: [],
-  removeItem: (id) => set((s) => ({ itemIds: s.itemIds.filter((x) => x !== id) })),
+  removeItem: (id) =>
+    set((s) => ({ itemIds: s.itemIds.filter((x) => x !== id) })),
 }));
 ```
 
@@ -658,4 +710,3 @@ Supabase is the backend for **auth, database, and storage**. All three flow thro
 
 - If existing code violates one of these rules, follow the existing pattern locally and propose the convention change deliberately before fixing at scale. Don't drive-by refactor; drift fixes are a separate task.
 - Routine compliance is the default. Deviating from a rule should be a recorded decision, not a quiet preference.
-
