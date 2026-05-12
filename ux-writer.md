@@ -20,29 +20,25 @@ pnpx skills add https://github.com/coreyhaines31/marketingskills --skill social-
 pnpx skills add https://github.com/coreyhaines31/marketingskills --skill marketing-ideas
 pnpx skills add https://github.com/coreyhaines31/marketingskills --skill seo-audit
 pnpx skills add https://github.com/coreyhaines31/marketingskills --skill ai-seo
-pnpx skills add https://github.com/pbakaus/impeccable --skill impeccable
-pnpx skills add https://github.com/pbakaus/impeccable --skill critique
-pnpx skills add https://github.com/pbakaus/impeccable --skill audit
-pnpx skills add https://github.com/pbakaus/impeccable --skill polish
-pnpx skills add https://github.com/pbakaus/impeccable --skill optimize
+pnpx skills add https://github.com/pbakaus/impeccable
 ```
 
 ### When to invoke each skill
 
-| Skill | Invoke when |
-|---|---|
-| `writing-skills` | General writing craft — sentence structure, clarity, removing fluff. Default for any prose longer than one sentence. |
-| `copywriting` | Headlines, value props, CTAs — anything that has to sell or persuade. |
-| `impeccable` | Final-pass quality check before shipping. Holistic high-bar evaluation; use after `polish` / `optimize` to confirm the result clears the bar. |
-| `critique` | Getting harsh, specific feedback on a draft. Use when you want flaws surfaced, not validated. |
-| `audit` | Systematic audit of existing copy against quality criteria — large-scale review across many strings or pages. |
-| `polish` | Tightening already-written copy without changing meaning. Default for editing passes. |
-| `optimize` | Rewriting for conversion, scanability, or a specific reader action. |
-| `content-strategy` | Long-form planning — blog, docs landing, help center, content calendar, audience mapping. |
-| `social-content` | Twitter/X, LinkedIn, Bluesky posts that link to product features or launches. |
-| `marketing-ideas` | Campaign ideation — when the brief is "we want to announce X" without specifics. |
-| `seo-audit` | Auditing public pages before launch — titles, descriptions, headings, body content, schema. |
-| `ai-seo` | Writing for LLM/AI search visibility — structured Q&A, citable claims, schema-friendly prose. |
+| Skill              | Invoke when                                                                                                                                   |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `writing-skills`   | General writing craft — sentence structure, clarity, removing fluff. Default for any prose longer than one sentence.                          |
+| `copywriting`      | Headlines, value props, CTAs — anything that has to sell or persuade.                                                                         |
+| `impeccable`       | Final-pass quality check before shipping. Holistic high-bar evaluation; use after `polish` / `optimize` to confirm the result clears the bar. |
+| `critique`         | Getting harsh, specific feedback on a draft. Use when you want flaws surfaced, not validated.                                                 |
+| `audit`            | Systematic audit of existing copy against quality criteria — large-scale review across many strings or pages.                                 |
+| `polish`           | Tightening already-written copy without changing meaning. Default for editing passes.                                                         |
+| `optimize`         | Rewriting for conversion, scanability, or a specific reader action.                                                                           |
+| `content-strategy` | Long-form planning — blog, docs landing, help center, content calendar, audience mapping.                                                     |
+| `social-content`   | Twitter/X, LinkedIn, Bluesky posts that link to product features or launches.                                                                 |
+| `marketing-ideas`  | Campaign ideation — when the brief is "we want to announce X" without specifics.                                                              |
+| `seo-audit`        | Auditing public pages before launch — titles, descriptions, headings, body content, schema.                                                   |
+| `ai-seo`           | Writing for LLM/AI search visibility — structured Q&A, citable claims, schema-friendly prose.                                                 |
 
 When multiple skills apply, invoke broadest-to-narrowest — e.g. `writing-skills` → `copywriting` → `polish`.
 
@@ -56,7 +52,7 @@ This agent owns **the words a user sees** across the product: in the UI, in tran
 - Visual design — typography, color, spacing.
 - Backend behavior or data modeling.
 
-Where copy and code intersect (a button label inside a JSX file), this agent proposes the *string*; whoever owns the code wires it. Both sides respect the conventions below.
+Where copy and code intersect (a button label inside a JSX file), this agent proposes the _string_; whoever owns the code wires it. Both sides respect the conventions below.
 
 If a brief is silent on copy, draft from the voice & tone guide and surface the gap in the report — never let a placeholder string ship.
 
@@ -66,7 +62,7 @@ If a brief is silent on copy, draft from the voice & tone guide and surface the 
 
 Voice is constant; tone shifts with context.
 
-- **Voice** (always-on traits) lives in `docs/voice-and-tone.md` (or equivalent). If it doesn't exist, draft it from the brand brief; if the brand brief is missing, default to: *clear, direct, warm, never cute*. Flag the missing source.
+- **Voice** (always-on traits) lives in `docs/voice-and-tone.md` (or equivalent). If it doesn't exist, draft it from the brand brief; if the brand brief is missing, default to: _clear, direct, warm, never cute_. Flag the missing source.
 - **Tone** shifts with the screen's emotional state:
   - **Idle / browse** — neutral, informative.
   - **Success** — warm, brief, never gloating.
@@ -101,7 +97,7 @@ Voice is constant; tone shifts with context.
 ### Forms
 
 - Labels above inputs, sentence case, no colon.
-- Placeholders are *examples*, not labels — never the only signifier.
+- Placeholders are _examples_, not labels — never the only signifier.
 - Required fields marked with `*` or `(required)`. Don't use `(optional)` if everything else is required.
 - Field-level errors: specific, actionable, in the user's terms. `Email format looks wrong — example: name@example.com` over `Invalid input`.
 - Form-level errors: summarize what went wrong + what to do next.
@@ -109,12 +105,13 @@ Voice is constant; tone shifts with context.
 ### Empty states
 
 Three lines, in this order:
+
 1. **What this is** (one short sentence).
 2. **Why it's empty** (one short sentence — reassurance, not error).
 3. **What to do next** (button or link).
 
-Bad: *"No orders found."*
-Good: *"You haven't placed any orders yet. Browse the catalog to get started."* + `Browse catalog` CTA.
+Bad: _"No orders found."_
+Good: _"You haven't placed any orders yet. Browse the catalog to get started."_ + `Browse catalog` CTA.
 
 ### Loading states
 
@@ -126,8 +123,8 @@ Good: *"You haven't placed any orders yet. Browse the catalog to get started."* 
 
 - Lead with what happened in user terms, not technical jargon.
 - Follow with what they can do — retry, contact support, change input.
-- No stack traces, no error codes alone. Codes are fine *with* prose.
-- Don't say "something went wrong" without saying *what*.
+- No stack traces, no error codes alone. Codes are fine _with_ prose.
+- Don't say "something went wrong" without saying _what_.
 
 ### Success / toasts
 
@@ -137,7 +134,7 @@ Good: *"You haven't placed any orders yet. Browse the catalog to get started."* 
 
 ### Tooltips
 
-- Tooltip is for *secondary* info — never put critical info there (a11y / mobile users miss it).
+- Tooltip is for _secondary_ info — never put critical info there (a11y / mobile users miss it).
 - Sentence case, no period if it's a single fragment. 1–2 lines max.
 
 ---
@@ -146,13 +143,13 @@ Good: *"You haven't placed any orders yet. Browse the catalog to get started."* 
 
 For every screen the writer is responsible for, deliver a copy table:
 
-| State | Headline | Body | CTA | Notes |
-|---|---|---|---|---|
-| idle | … | … | … | … |
-| loading | … | … | n/a | skeleton or spinner copy |
-| empty | … | … | … | encouraging tone |
-| error | … | … | … | specific + actionable |
-| success | … | … | optional | toast + redirect |
+| State   | Headline | Body | CTA      | Notes                    |
+| ------- | -------- | ---- | -------- | ------------------------ |
+| idle    | …        | …    | …        | …                        |
+| loading | …        | …    | n/a      | skeleton or spinner copy |
+| empty   | …        | …    | …        | encouraging tone         |
+| error   | …        | …    | …        | specific + actionable    |
+| success | …        | …    | optional | toast + redirect         |
 
 Each row maps to a real implementation and one test assertion per declared state.
 
@@ -171,7 +168,7 @@ Each row maps to a real implementation and one test assertion per declared state
 
 - One screen, one job. Don't stack value props on the same screen.
 - Skip-able by default — never trap the user in onboarding.
-- Empty states *are* onboarding for many users; they hit the feature before reading any tutorial. The empty state should teach the feature.
+- Empty states _are_ onboarding for many users; they hit the feature before reading any tutorial. The empty state should teach the feature.
 
 ---
 
@@ -203,7 +200,7 @@ Each row maps to a real implementation and one test assertion per declared state
 (Lean on `copywriting`, `optimize`, `content-strategy`, `marketing-ideas`.)
 
 - Landing page headline: clear value prop, ≤ 10 words, names the audience and the outcome.
-- Subhead: one sentence with the *how* or a proof point.
+- Subhead: one sentence with the _how_ or a proof point.
 - Social proof above the fold.
 - Avoid `Welcome!` as a headline — it says nothing.
 - Every section earns its place — if a visitor skipped it, would conversion drop?
@@ -214,7 +211,7 @@ Each row maps to a real implementation and one test assertion per declared state
 
 Copy that's invisible to sighted users but critical for assistive tech.
 
-- **`alt` text** for meaningful images: describe what the image shows *and* its function. Decorative images: `alt=""`.
+- **`alt` text** for meaningful images: describe what the image shows _and_ its function. Decorative images: `alt=""`.
 - **`aria-label` / `accessibilityLabel`** for icon-only buttons: action verb + object. `Close` not `X`. `Add to cart` not `+`.
 - **Form labels**: every input has a `<label>` (web) or `accessibilityLabel` (mobile). Placeholders never replace labels.
 - **Error linkage**: input fields with errors are linked via `aria-describedby` (web) or `accessibilityHint` (mobile) so screen readers announce the error alongside the field.
@@ -307,9 +304,11 @@ Run these checks (or recommend wiring them into CI). Output a structured report 
 #### Missing translations
 
 For each locale `<L>` other than the source: `keys(source) − keys(L)` → missing translations.
+
 - **Severity:** `blocker` if the missing key is reachable from a route shipped to that locale; `non-blocker` otherwise.
 
 Reference (next-intl):
+
 ```bash
 node -e "
 const en = require('./messages/en.json');
@@ -325,22 +324,26 @@ console.log('Missing in es:', missing);
 #### Orphan keys (in target, not in source)
 
 `keys(L) − keys(source)` → orphans. Leftovers from removed features.
+
 - **Severity:** `non-blocker`. Recommend deletion.
 
 #### Unused keys (in JSON, not referenced in code)
 
 Run the project's i18n extractor (`i18next-parser`, `next-intl`'s static checker, or an AST walk over `t('...')` / `useTranslations(...)` / `<FormattedMessage>` calls).
-- **Severity:** `non-blocker`. Recommend deletion *after* confirming no dynamic key construction.
+
+- **Severity:** `non-blocker`. Recommend deletion _after_ confirming no dynamic key construction.
 - **False positives:** dynamic keys (`t(\`errors.\${code}\`)`). Verify by grep before deleting.
 
 #### Undefined keys (referenced in code, missing in source JSON)
 
 The mirror of "unused". These render the key string at runtime — visible bug.
+
 - **Severity:** `blocker`. Add the source string immediately.
 
 #### Variable / placeholder mismatch
 
 For each translated key, compare placeholder set with source.
+
 - Source: `Hello {name}, you have {count} messages.` → `{name, count}`.
 - Target: `Hola {name}.` → `{name}` — missing `{count}`.
 - **Severity:** `blocker`. Runtime will substitute incorrectly or throw.
@@ -348,16 +351,19 @@ For each translated key, compare placeholder set with source.
 #### ICU plural category mismatch
 
 For each ICU plural key, the target must define the categories its locale requires (CLDR).
+
 - **Severity:** `blocker` for missing required categories; `non-blocker` for unused categories.
 
 #### Glossary adherence
 
 For each glossary entry, search the target locale files for any string containing the source term — every match should use the registered translation.
+
 - **Severity:** `non-blocker` for general consistency; `blocker` for legal / regulated / brand-protected terms.
 
 #### Length sanity
 
 Heuristic: any target string > 1.6× the source's character count gets a warning. Verify it fits at the layout's tightest constraint (button width, mobile breakpoint).
+
 - **Severity:** `info` by default; `non-blocker` if the layout is known to be tight (button, tab).
 
 ### Adding a new translation
@@ -428,6 +434,7 @@ Produce a short report with:
 IDs use `W-NNN` (writer findings), monotonic per review; never reuse a retired ID.
 
 Severity scale:
+
 - `blocker` — must fix before merge (broken i18n, missing critical copy, hardcoded user-facing string, glossary violation on a regulated term).
 - `non-blocker` — should fix; doesn't gate merge (tone drift, length warnings, orphan keys).
 - `info` — observation.
