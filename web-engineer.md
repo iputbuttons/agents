@@ -22,8 +22,8 @@ pnpx skills add https://github.com/vercel-labs/agent-skills --skill vercel-compo
 pnpx skills add https://github.com/vercel-labs/agent-skills --skill vercel-react-view-transitions
 pnpx skills add https://github.com/vercel-labs/agent-browser --skill agent-browser
 pnpx skills add https://github.com/remotion-dev/skills --skill remotion-best-practices
-pnpx skills add https://github.com/supabase/agent-skills --skill supabase
-pnpx skills add https://github.com/supabase/agent-skills --skill supabase-postgres-best-practices
+pnpx skills add supabase/agent-skills --skill supabase
+pnpx skills add supabase/agent-skills --skill supabase-postgres-best-practices
 pnpx skills add https://github.com/currents-dev/playwright-best-practices-skill --skill playwright-best-practices
 pnpx skills add https://github.com/microsoft/playwright-cli --skill playwright-cli
 pnpx skills add https://github.com/coreyhaines31/marketingskills --skill seo-audit
@@ -55,6 +55,10 @@ pnpx skills add https://cli.sentry.dev
 | `sentry-cli` | Configuring Sentry, uploading source maps, tagging releases, scrubbing PII via `beforeSend` (§14, §18). |
 
 When multiple skills apply to the same task, invoke them broadest-to-narrowest — e.g. `frontend-design` for the component shape, then `vercel-composition-patterns` for the API surface, then `vercel-react-best-practices` for the React-level details.
+
+### Supabase MCP
+
+In addition to the `supabase` and `supabase-postgres-best-practices` skills, this agent may use the **Supabase MCP server** when available. Prefer the MCP for live project introspection — listing tables, inspecting schemas, running read-only SQL, generating types, applying migrations, checking logs, and reading advisor notices. Skills provide patterns; the MCP provides ground truth against the running project. Use both together: consult the skill for *how* to do something, then use the MCP to verify the *current state* of the project before acting.
 
 ---
 

@@ -16,8 +16,8 @@ Run these once per project (or globally) to make the skills available:
 pnpx skills add expo/skills
 pnpx skills add https://github.com/anthropics/skills --skill frontend-design
 pnpx skills add https://github.com/nextlevelbuilder/ui-ux-pro-max-skill --skill ui-ux-pro-max
-pnpx skills add https://github.com/supabase/agent-skills --skill supabase
-pnpx skills add https://github.com/supabase/agent-skills --skill supabase-postgres-best-practices
+pnpx skills add supabase/agent-skills --skill supabase
+pnpx skills add supabase/agent-skills --skill supabase-postgres-best-practices
 pnpx skills add https://github.com/vercel-labs/agent-skills --skill vercel-react-native-skills
 pnpx skills add https://github.com/sleekdotdesign/agent-skills --skill sleek-design-mobile-apps
 pnpx skills add https://github.com/pbakaus/impeccable
@@ -40,6 +40,14 @@ pnpx skills add https://cli.sentry.dev
 | `sentry-cli`                       | Configuring `sentry-expo`, uploading source maps, tagging releases, scrubbing PII via `beforeSend` (§14, §18).                                                                                                         |
 
 When multiple skills apply to the same task, invoke them broadest-to-narrowest — e.g. `frontend-design` for the component shape, then `sleek-design-mobile-apps` for mobile polish, then `vercel-react-native-skills` for RN-specific implementation details.
+
+### Supabase MCP
+
+In addition to the `supabase` and `supabase-postgres-best-practices` skills, this agent may use the **Supabase MCP server** when available. Prefer the MCP for live project introspection — listing tables, inspecting schemas, running read-only SQL, generating types, applying migrations, checking logs, and reading advisor notices. Skills provide patterns; the MCP provides ground truth against the running project. Use both together: consult the skill for *how* to do something, then use the MCP to verify the *current state* of the project before acting.
+
+### Expo MCP
+
+This agent may also use the **Expo MCP server** when available. Prefer the MCP for Expo-specific introspection and tasks — querying the installed Expo SDK and module versions, inspecting `app.json` / `app.config.ts`, looking up SDK docs, checking EAS Build/Update status, and resolving compatibility questions across SDK versions. Pair it with the `expo` skill: the skill describes patterns and conventions, while the MCP reflects the project's actual Expo state. Use it before bumping SDK versions, adding native modules, or debugging EAS workflows.
 
 ---
 
