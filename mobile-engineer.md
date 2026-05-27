@@ -185,9 +185,10 @@ Top-level skeleton:
 ├── features/    # feature-sliced modules (per-feature tree below)
 └── shared/      # cross-feature primitives
     ├── components/   # reusable UI
-    ├── configs/      # global config (env, API clients, theme)
+    ├── configs/      # global config — env, API clients, theme, locales.ts (§15)
     ├── hooks/        # cross-feature hooks
     ├── icons/        # icon components
+    ├── locales/      # cross-feature translations (es.json, …) — see §15
     ├── providers/    # third-party providers (React Query, theme, auth) — see below
     │   └── providers.tsx  # exports `Providers`, a single wrapper composing every provider
     ├── stores/       # global Zustand stores only — feature stores live in the feature (§16)
@@ -199,6 +200,7 @@ Use a fixed file role set inside every feature directory:
 ```
 features/<name>/
 ├── components/
+├── locales/                # per-feature translations (es.json, …) — see §15
 ├── tests/                  # unit/integration (.test.ts) + E2E Maestro flows (.yaml) — see §12
 ├── <name>.api.ts        # data access / fetchers
 ├── <name>.consts.ts     # static values, enums
@@ -490,6 +492,37 @@ Implement every declared state — write one test assertion per state.
 - Prefer Expo SDK modules over third-party native modules when both exist (`expo-image`, `expo-av`, `expo-camera`, etc.) — they're maintained against the current Expo version.
 - New native dependencies require an EAS Build (no Expo Go). Document the build profile in deployment docs.
 - Permissions: declare in `app.json` / `app.config.ts`. Request at the moment of need with a clear pre-prompt explaining why (see §18 for the security side of permissions).
+
+### Localization (i18n)
+
+Product copy is Spanish — `es` is the source locale. Every user-facing string flows through i18n from the moment it's written; hardcoded strings are a regression (ux-writer §10).
+
+- **Stack**: `expo-localization` detects the device locale (`getLocales()`); `i18next` + `react-i18next` does the lookup and rendering. expo-localization does **not** translate — it only reads locale / region / calendar — so it's always paired with i18next.
+- **Where translations live** (§6): each feature owns `features/<name>/locales/<locale>.json`, registered as that feature's namespace (`orders`, `clubs`, …). Cross-feature strings live in `shared/locales/<locale>.json` (the `common` namespace). Never put a feature's strings in `shared/locales`.
+- **Config**: `shared/configs/locales.ts` is the single i18n entry point — it reads the device locale, registers every feature + shared namespace as resources, sets `es` as `fallbackLng`, and exports the initialized instance. Import it once from `Providers` / the root layout; never call `i18next.init` anywhere else.
+- **Consuming**: components read strings via `useTranslation('<feature>')` and key into the namespace (`t('list.empty.title')`). No raw string literals in JSX.
+- **Keys, plurals, formatting**: follow ux-writer §10 — hierarchical keys describing the slot, ICU MessageFormat for plurals / select, named variables, never runtime concatenation. Dates / numbers / currency go through `Intl.*` with the active locale.
+- **Locale override**: a user override of the device locale is global UI state — keep it in `shared/stores/locale.store.ts` (§16, `app-locale`) and apply it via `i18next.changeLanguage`. With no override, follow the device.
+
+```ts
+// shared/configs/locales.ts
+import { getLocales } from "expo-localization";
+import i18next from "i18next";
+import { initReactI18next } from "react-i18next";
+
+import ordersEs from "@/features/orders/locales/es.json";
+import commonEs from "@/shared/locales/es.json";
+
+void i18next.use(initReactI18next).init({
+  defaultNS: "common",
+  fallbackLng: "es",
+  lng: getLocales()[0]?.languageCode ?? "es",
+  ns: ["common", "orders"],
+  resources: { es: { common: commonEs, orders: ordersEs } },
+});
+
+export { i18next };
+```
 
 ### Performance
 

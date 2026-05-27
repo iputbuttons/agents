@@ -225,13 +225,21 @@ This is the agent's largest responsibility after voice. Every string in the prod
 
 ### Stack detection
 
-- **Next.js**: prefer `next-intl`. Source-language file at `messages/<source>.json` (e.g. `messages/en.json`); other locales sit alongside (`messages/es.json`, `messages/de.json`).
-- **React (Vite, RN, plain)**: prefer `react-i18next` / `i18next`. Files at `i18n/<locale>/<namespace>.json` or `locales/<locale>/<ns>.json`.
+- **Next.js**: prefer `next-intl`. **React Native / Expo**: `expo-localization` (device-locale detection) + `react-i18next` / `i18next` (lookup) — expo-localization only reads the locale, it doesn't translate. **React (Vite, plain)**: `react-i18next` / `i18next`.
 - **Other** — match the project's existing setup; never introduce a second i18n library alongside an existing one.
+
+### Where translation files live (feature-sliced)
+
+Translations follow the engineering Screaming Architecture (mobile / web §6), not one central folder:
+
+- **Per-feature** strings → `features/<name>/locales/<locale>.json`, registered as the feature's namespace (`orders`, `clubs`, …).
+- **Cross-feature** strings → `shared/locales/<locale>.json` (the `common` namespace) — only genuinely shared strings (`cancel`, `save`, `retry`).
+- **Config / init** → `shared/configs/locales.ts` is the single i18n entry point that composes every feature + shared namespace and wires locale detection. Never hand-roll a second init.
+- This product's **source locale is `es`** (Spanish), not `en` — every other locale is derived from `es`.
 
 ### Source of truth
 
-- The project declares one **source language** (usually `en`). Strings are written in source first, then translated.
+- The project declares one **source language** — `es` (Spanish) on this product; `en` on many others. Strings are written in source first, then translated.
 - All other locales are derived — never write a translated string before the source exists.
 - The agent owns the source-language file end-to-end. Translated locales can come from a TMS (Crowdin, Lokalise, Phrase) or be drafted by the agent and reviewed by a native speaker.
 
@@ -252,6 +260,7 @@ common.save
 
 - `common.*` only for genuinely cross-feature strings (`cancel`, `save`, `loading`, `retry`). Bias toward feature-scoped keys; `common` is the exception, not the default.
 - Never name keys after their content (`orders.empty_no_orders_found`) — names describe slot, not phrase.
+- With feature-sliced files (see "Where translation files live" above), the **feature segment is the file's namespace**, not a key prefix. `features/orders/locales/es.json` starts its keys at `list.empty.title`; address them as `orders:list.empty.title` (react-i18next) or `useTranslations('orders')` → `t('list.empty.title')`. `common.*` keys live in `shared/locales`.
 
 ### ICU MessageFormat (plurals, genders, selects)
 

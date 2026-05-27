@@ -200,9 +200,10 @@ Top-level skeleton:
 ├── features/    # feature-sliced modules (per-feature tree below)
 └── shared/      # cross-feature primitives
     ├── components/   # reusable UI
-    ├── configs/      # global config (env, API clients, theme)
+    ├── configs/      # global config — env, API clients, theme, locales.ts (§15)
     ├── hooks/        # cross-feature hooks
     ├── icons/        # icon components
+    ├── locales/      # cross-feature translations (es.json, …) — see §15
     ├── providers/    # third-party providers (React Query, theme, auth) — see below
     │   └── providers.tsx  # exports `Providers`, a single wrapper composing every provider
     ├── stores/       # global Zustand stores only — feature stores live in the feature (§16)
@@ -214,6 +215,7 @@ Use a fixed file role set inside every feature directory:
 ```
 features/<name>/
 ├── components/
+├── locales/                # per-feature translations (es.json, …) — see §15
 ├── tests/                  # unit/integration (.test.ts) + E2E Playwright flows (.spec.ts) — see §12
 ├── <name>.api.ts        # data access / fetchers (server actions, route handlers)
 ├── <name>.consts.ts     # static values, enums
@@ -466,6 +468,17 @@ Implement every declared state — write one test assertion per state.
 - Server Actions for mutations triggered by the user. Validate inputs with `zod` (or your chosen validator) at the boundary.
 - Client-side data fetching only when the data depends on browser state (auth tokens in localStorage, real-time data, etc.). Use `swr` or `@tanstack/react-query`.
 - Never fetch on the client what the server can fetch on render — it costs an extra round-trip and a loading state.
+
+### Localization (i18n)
+
+Product copy is Spanish — `es` is the source locale. Every user-facing string flows through i18n; hardcoded strings are a regression (ux-writer §10).
+
+- **Stack**: `next-intl` (App Router). The active locale comes from the request — a path segment, cookie, or `Accept-Language` — never from client state.
+- **Where translations live** (§6): each feature owns `features/<name>/locales/<locale>.json`, registered as that feature's namespace; cross-feature strings live in `shared/locales/<locale>.json` (the `common` namespace). Never put a feature's strings in `shared/locales`.
+- **Config**: `shared/configs/locales.ts` is the single composition point — it merges every feature + shared locale file into the per-locale messages object and sets `es` as the default / fallback. next-intl's `i18n/request.ts` imports the merged messages from it; don't scatter `getMessages` logic across the app.
+- **Consuming**: Server Components use `getTranslations('<feature>')`; Client Components use `useTranslations('<feature>')`. Key into the feature namespace; no raw string literals in JSX.
+- **Keys, plurals, formatting**: follow ux-writer §10 — hierarchical keys, ICU MessageFormat, named variables, next-intl / `Intl.*` formatters for dates / numbers / currency.
+- **Locale override**: a user override is global UI state (`app-locale`, §16); persist it (cookie) and reflect it in the request config.
 
 ### Performance
 
