@@ -378,7 +378,7 @@ Design tokens (colors, spacing, radii, elevation, typography, breakpoints) live 
 - Platform branches: `Platform.select({ ios: ..., android: ... })` only when there's a real platform difference (haptics, blur view, status bar). Don't branch by default.
 - Safe areas: every screen's root uses `SafeAreaView` (or `useSafeAreaInsets()` from `react-native-safe-area-context`) — never hardcoded top/bottom padding.
 - Sort classes with the official Prettier plugin (`prettier-plugin-tailwindcss`) so review diffs stay clean.
-- Targets **Tailwind v3 + NativeWind v4**. Tailwind v4's CSS-first config is not yet supported by NativeWind — stay on v3 until that lands.
+- Targets **Tailwind v4 + NativeWind v5**. Tailwind v4 is CSS-first: tokens live in a CSS entry via `@theme` (wired with `react-native-css`), not in `tailwind.config.js` — define and reference them there.
 
 ---
 
