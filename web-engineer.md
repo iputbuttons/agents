@@ -140,6 +140,8 @@ A util is shared (`shared/utils/<name>.ts`) only when its parameters and return 
 
 ## 5. Component file structure
 
+**One component per file.** The file's name matches the component it exports (`user-card.tsx` exports `UserCard`, and only `UserCard`). No additional components — not even small "private" helpers — share the file. If a subcomponent emerges, give it its own file in the same directory. Utils, types, and constants live in their respective `<name>.utils.ts` / `<name>.types.ts` / `<name>.consts.ts` files (§4, §6, §8), never alongside the component.
+
 Order inside a component file, separated by single blank lines:
 
 ```tsx
@@ -369,6 +371,7 @@ Design tokens (colors, spacing, radii, shadows, typography, breakpoints) live in
 - **Tailwind** is the styling system. No CSS modules, no styled-components, no inline `style={{...}}` for anything but truly dynamic values (computed widths, transforms driven by state).
 - Tokens live in `tailwind.config.*` (see §10). The config is the single source of truth — components reference token names, never raw values.
 - No magic numbers in className strings. Use scale steps (`p-md`, `gap-sm`) over `p-[13px]`. The `[arbitrary]` syntax is an escape hatch, not a default.
+- **Spacing between siblings uses `gap` on the parent**, never `margin` (or `padding`) on the children. A flex/grid container with `gap-md` is the only correct way to space a list of elements — no `mt-*` / `mb-*` / `space-y-*` trick, no `:not(:last-child)` margin, no `pt-*` on the next sibling. Reserve `margin` for the rare case of pushing a single element away from a non-sibling boundary, and `padding` for inner box spacing.
 - Dark mode: `class` strategy with a theme provider; respect system preference by default.
 - Conditional classes: use `clsx` / `cn` helpers, not string concatenation. Pair with `tailwind-merge` to resolve conflicts when composing variants.
 - Variants: use `cva` (class-variance-authority) for component variant APIs (`Button({ size, variant })`), not bespoke conditional chains.
