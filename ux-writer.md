@@ -13,34 +13,90 @@ This agent delegates specialized work to external skills via the Skill tool. If 
 Run these once per project (or globally):
 
 ```bash
+# Writing craft + final-pass quality
 pnpx skills add https://github.com/obra/superpowers --skill writing-skills
-pnpx skills add https://github.com/coreyhaines31/marketingskills --skill copywriting
-pnpx skills add https://github.com/coreyhaines31/marketingskills --skill content-strategy
-pnpx skills add https://github.com/coreyhaines31/marketingskills --skill social-content
-pnpx skills add https://github.com/coreyhaines31/marketingskills --skill marketing-ideas
-pnpx skills add https://github.com/coreyhaines31/marketingskills --skill seo-audit
-pnpx skills add https://github.com/coreyhaines31/marketingskills --skill ai-seo
 pnpx skills add https://github.com/pbakaus/impeccable
+
+# Marketing skill library (coreyhaines31/marketingskills) — the full recommended set.
+# Run interactively (`pnpx skills add https://github.com/coreyhaines31/marketingskills`)
+# to multi-select, or add them one by one as below.
+pnpx skills add https://github.com/coreyhaines31/marketingskills --skill ad-creative
+pnpx skills add https://github.com/coreyhaines31/marketingskills --skill ads
+pnpx skills add https://github.com/coreyhaines31/marketingskills --skill ai-seo
+pnpx skills add https://github.com/coreyhaines31/marketingskills --skill cold-email
+pnpx skills add https://github.com/coreyhaines31/marketingskills --skill community-marketing
+pnpx skills add https://github.com/coreyhaines31/marketingskills --skill competitor-profiling
+pnpx skills add https://github.com/coreyhaines31/marketingskills --skill competitors
+pnpx skills add https://github.com/coreyhaines31/marketingskills --skill content-strategy
+pnpx skills add https://github.com/coreyhaines31/marketingskills --skill copywriting
+pnpx skills add https://github.com/coreyhaines31/marketingskills --skill marketing-ideas
+pnpx skills add https://github.com/coreyhaines31/marketingskills --skill marketing-plan
+pnpx skills add https://github.com/coreyhaines31/marketingskills --skill marketing-psychology
+pnpx skills add https://github.com/coreyhaines31/marketingskills --skill onboarding
+pnpx skills add https://github.com/coreyhaines31/marketingskills --skill paywalls
+pnpx skills add https://github.com/coreyhaines31/marketingskills --skill popups
+pnpx skills add https://github.com/coreyhaines31/marketingskills --skill pricing
+pnpx skills add https://github.com/coreyhaines31/marketingskills --skill product-marketing
+pnpx skills add https://github.com/coreyhaines31/marketingskills --skill programmatic-seo
+pnpx skills add https://github.com/coreyhaines31/marketingskills --skill prospecting
+pnpx skills add https://github.com/coreyhaines31/marketingskills --skill referrals
+pnpx skills add https://github.com/coreyhaines31/marketingskills --skill revops
+pnpx skills add https://github.com/coreyhaines31/marketingskills --skill sales-enablement
+pnpx skills add https://github.com/coreyhaines31/marketingskills --skill schema
+pnpx skills add https://github.com/coreyhaines31/marketingskills --skill seo-audit
+pnpx skills add https://github.com/coreyhaines31/marketingskills --skill signup
+pnpx skills add https://github.com/coreyhaines31/marketingskills --skill site-architecture
+pnpx skills add https://github.com/coreyhaines31/marketingskills --skill social
+pnpx skills add https://github.com/coreyhaines31/marketingskills --skill video
 ```
 
 ### When to invoke each skill
 
-| Skill              | Invoke when                                                                                                                                   |
-| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| `writing-skills`   | General writing craft — sentence structure, clarity, removing fluff. Default for any prose longer than one sentence.                          |
-| `copywriting`      | Headlines, value props, CTAs — anything that has to sell or persuade.                                                                         |
-| `impeccable`       | Final-pass quality check before shipping. Holistic high-bar evaluation; use after `polish` / `optimize` to confirm the result clears the bar. |
-| `critique`         | Getting harsh, specific feedback on a draft. Use when you want flaws surfaced, not validated.                                                 |
-| `audit`            | Systematic audit of existing copy against quality criteria — large-scale review across many strings or pages.                                 |
-| `polish`           | Tightening already-written copy without changing meaning. Default for editing passes.                                                         |
-| `optimize`         | Rewriting for conversion, scanability, or a specific reader action.                                                                           |
-| `content-strategy` | Long-form planning — blog, docs landing, help center, content calendar, audience mapping.                                                     |
-| `social-content`   | Twitter/X, LinkedIn, Bluesky posts that link to product features or launches.                                                                 |
-| `marketing-ideas`  | Campaign ideation — when the brief is "we want to announce X" without specifics.                                                              |
-| `seo-audit`        | Auditing public pages before launch — titles, descriptions, headings, body content, schema.                                                   |
-| `ai-seo`           | Writing for LLM/AI search visibility — structured Q&A, citable claims, schema-friendly prose.                                                 |
+**Writing craft & quality** (`obra/superpowers`, `pbakaus/impeccable`):
 
-When multiple skills apply, invoke broadest-to-narrowest — e.g. `writing-skills` → `copywriting` → `polish`.
+| Skill            | Invoke when                                                                                                                                   |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `writing-skills` | General writing craft — sentence structure, clarity, removing fluff. Default for any prose longer than one sentence.                          |
+| `impeccable`     | Final-pass quality check before shipping. Holistic high-bar evaluation; use after `polish` / `optimize` to confirm the result clears the bar. |
+| `critique`       | Getting harsh, specific feedback on a draft. Use when you want flaws surfaced, not validated.                                                 |
+| `audit`          | Systematic audit of existing copy against quality criteria — large-scale review across many strings or pages.                                 |
+| `polish`         | Tightening already-written copy without changing meaning. Default for editing passes.                                                         |
+| `optimize`       | Rewriting for conversion, scanability, or a specific reader action.                                                                           |
+
+**Marketing library** (`coreyhaines31/marketingskills`):
+
+| Skill                  | Invoke when                                                                                                          |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `product-marketing`    | First — capture positioning, ICP, and product context in `.agents/product-marketing.md`; every other skill reads it. |
+| `copywriting`          | Writing/rewriting page copy — homepage, landing, pricing, feature, about. Headlines, value props, CTAs.             |
+| `content-strategy`     | Deciding what content to create — topic clusters, editorial calendar, content pillars.                              |
+| `social`               | Social posts (LinkedIn, X, Instagram, TikTok) and short-form video scripts/hooks.                                   |
+| `video`                | Producing video content — scripts, hooks, short-form (Reels/Shorts/TikTok).                                         |
+| `ad-creative`          | Generating/iterating ad copy at scale — headlines, descriptions, RSA variations.                                    |
+| `ads`                  | Paid-campaign strategy — targeting, bidding, ROAS/CPA across Google/Meta/LinkedIn.                                  |
+| `cold-email`           | B2B cold outreach emails and multi-touch follow-up sequences.                                                       |
+| `marketing-ideas`      | Idea/inspiration when stuck — growth tactics, ways to promote.                                                       |
+| `marketing-plan`       | Comprehensive AARRR marketing plan / GTM roadmap for a stage and budget.                                            |
+| `marketing-psychology` | Applying behavioral science / cognitive biases (social proof, scarcity, framing) to copy.                          |
+| `seo-audit`            | Auditing/diagnosing technical & on-page SEO — titles, headings, crawl/index, page speed.                            |
+| `ai-seo`               | Optimizing for AI search / LLM citations (AEO/GEO) — structured Q&A, citable claims.                                |
+| `schema`               | Adding/fixing structured data — JSON-LD, rich snippets, FAQ/Product/Review schema.                                  |
+| `programmatic-seo`     | Generating SEO pages at scale from templates + data (location/comparison/integration pages).                       |
+| `site-architecture`    | Planning page hierarchy, navigation, URL structure, internal linking, IA.                                           |
+| `competitors`          | Comparison / "vs" / alternative pages positioning the product against rivals.                                       |
+| `competitor-profiling` | Researching/profiling competitors from their URLs into structured dossiers.                                         |
+| `onboarding`           | Post-signup activation copy — first-run, empty states, checklists, aha moment.                                      |
+| `signup`               | Signup/registration/trial-activation flow copy and friction reduction.                                              |
+| `paywalls`             | In-app upgrade screens, upsell modals, feature gates, trial-expiration copy.                                        |
+| `popups`               | Popups, modals, banners, exit-intent, lead-capture overlays.                                                        |
+| `pricing`              | Pricing/packaging/monetization copy and decisions — tiers, freemium, value metric.                                 |
+| `sales-enablement`     | Sales collateral — decks, one-pagers, objection handling, demo scripts.                                             |
+| `prospecting`          | Finding/qualifying/building prospect lists before outreach.                                                         |
+| `referrals`            | Referral/affiliate/word-of-mouth program copy and structure.                                                        |
+| `revops`               | Revenue ops — lead scoring/routing, MQL/SQL, marketing→sales handoff.                                               |
+| `community-marketing`  | Building/growing online communities (Discord, Slack, forums, ambassadors).                                          |
+
+When multiple skills apply, invoke broadest-to-narrowest — e.g. `product-marketing` (context) → `content-strategy` → `copywriting` → `polish` → `impeccable`. Lead with `product-marketing` so the rest share one positioning/ICP source.
 
 ---
 
