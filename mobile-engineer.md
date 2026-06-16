@@ -493,6 +493,16 @@ Implement every declared state — write one test assertion per state.
 - New native dependencies require an EAS Build (no Expo Go). Document the build profile in deployment docs.
 - Permissions: declare in `app.json` / `app.config.ts`. Request at the moment of need with a clear pre-prompt explaining why (see §18 for the security side of permissions).
 
+### Over-the-air updates — EAS Update
+
+- **`expo-updates` + EAS Update** push JS bundle and asset changes over-the-air between app launches — no new store submission. EAS Build ships the binary with `expo-updates` baked in; EAS Update then serves every subsequent non-native update to that binary. Read https://docs.expo.dev/eas-update/introduction/ (overview) and https://docs.expo.dev/versions/v56.0.0/sdk/updates/ (the `expo-updates` API) before wiring it.
+- **The JS/native boundary is the rule that governs everything.** OTA can ship JS bug fixes, copy/translations, styling, layout, image assets, and feature-flag rollouts. It **cannot** ship native code changes, new permissions, new native dependencies, or an Expo SDK bump — those need a fresh EAS Build and a new binary. When in doubt, it's native: rebuild.
+- **Runtime version**: an update only reaches builds whose `runtimeVersion` is compatible. Any native change must bump the runtime version; never publish an update against a runtime that diverges from the binary's native code (it'll be rejected or crash).
+- **Channels & branches**: a channel maps to an EAS Build profile (`production`, `preview`), branches map to lines of work. Promote a branch to a channel to release; roll back by republishing a previous known-good update (acts like a git revert).
+- **Commands**: `eas update:configure` once to set up; `eas update --channel <channel>` (or `--branch <branch>`) to publish.
+- **Custom UX**: the default check runs at launch. Use the `useUpdates()` hook for custom check / download / reload strategies (e.g. prompt before reloading mid-session).
+- **Best practices**: keep channels aligned with EAS Build profiles; always test on `preview` before publishing to `production`; follow the app-store OTA guidelines (don't ship updates that materially change the app's purpose); monitor rollout health — crash rate and adoption — after each publish (the `eas-update-insights` skill covers this).
+
 ### Localization (i18n)
 
 Product copy is Spanish — `es` is the source locale. Every user-facing string flows through i18n from the moment it's written; hardcoded strings are a regression (ux-writer §10).
